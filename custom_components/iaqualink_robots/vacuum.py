@@ -62,59 +62,64 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     async_add_entities(entities)
 
 class IAquaLinkRobotVacuum(StateVacuumEntity):
-    """Represents an iaqualink_robots vacuum."""
+    """Represents an iAqualink robot vacuum."""
 
     def __init__(self, config):
         """Initialize with the YAML config passed by HA."""
         super().__init__()
-        self._name     = config.get("name")
+        # Identity
+        self._attr_name      = config.get("name")
+        self._attr_unique_id = config.get("serial_number", config.get("username"))
+
+        # Credentials
         self._username = config.get("username")
         self._password = config.get("password")
         self._api_key  = config.get("api_key")
 
-        # Basic state holders
-        self._attributes         = {}
-        self._activity           = VacuumActivity.IDLE
-        self._status             = STATE_OFF
-        self._supported_features = SUPPORT_FLAGS
-        self._temperature        = None
-        self._battery_level      = None
+        # Supported features
+        self._attr_supported_features = SUPPORT_FLAGS
 
-        # If you had more in your original __init__, paste it here!
+        # Fan speeds (must exist)
+        self._fan_speed_list = []
 
-    @property
-    def name(self):
-        return self._name
+        # Activity & status
+        self._activity = VacuumActivity.IDLE
+        self._status   = STATE_OFF
 
-    @property
-    def supported_features(self):
-        return self._supported_features
+        # Extra attributes container
+        self._attr_extra_state_attributes = {}
 
-    @property
-    def state(self):
-        # Map VacuumActivity to HA states if needed
-        if self._activity == VacuumActivity.CLEANING:
-            return STATE_ON
-        return STATE_OFF
+        # Placeholder data
+        self._temperature   = None
+        self._battery_level = None
 
     @property
-    def available(self):
-        return True  # or more precise logic
+    def activity(self) -> VacuumActivity:
+        """Return current VacuumActivity."""
+        return self._activity
 
-    async def async_start(self):
-        """Start vacuum logic here (your original code)."""
-        pass
+    @property
+    def fan_speed_list(self) -> list:
+        """Return list of supported fan speeds."""
+        return self._fan_speed_list
 
-    async def async_stop(self, **kwargs):
-        """Stop vacuum logic here (original code)."""
-        pass
+    async def async_start(self) -> None:
+        """Start the cleaning cycle (stub)."""
+        self._activity = VacuumActivity.CLEANING
+        self.async_write_ha_state()
 
-    async def async_update(self):
-        """Fetch latest state/attributes."""
-        # Paste your original async_update logic here, populating:
-        #   self._attributes["username"], etc.
-        #   self._temperature = ...
-        #   self._activity = VacuumActivity.CLEANING/IDLE/etc.
+    async def async_stop(self, **kwargs) -> None:
+        """Stop the cleaning cycle (stub)."""
+        self._activity = VacuumActivity.IDLE
+        self.async_write_ha_state()
+
+    async def async_update(self) -> None:
+        """Fetch the latest state/attributes (stub)."""
+        # >>> TEMPORARY: no-op. Simply ensure class loads. <<<
+
+        # Once this works, you can paste back your full async_update() logic here,
+        # including setting: self._activity, self._temperature,
+        # self._attr_extra_state_attributes["canister"], etc.
         pass
 
 # ──────── SensorEntity classes ────────
