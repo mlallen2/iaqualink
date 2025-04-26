@@ -1,3 +1,10 @@
 {
-  "name": "iaqualink_robots"
+  "name": "iAqualink Custom",
+  "content": [
+    {
+      "path": "custom_components/iaqualink_custom",
+      "type": "integration"
+    }
+  ],
+  "homeassistant": "2021.6.0"
 }
