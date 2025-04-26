@@ -1,14 +1,12 @@
 {
-    "domain": "iaqualinkRobots",
-    "name": "IaqualinkRobots",
-    "codeowners": ["@galletn"],
-    "config_flow": false,
-    "dependencies": [],
-    "documentation": "https://github.com/galletn/iaqualink/",
-    "integration_type": "device",
-    "iot_class": "cloud_polling",
-    "issue_tracker": "https://github.com/galletn/iaqualink/issues/",
-    "requirements": [],
-    "version": "1.6.0"
-  }
-  
+  "domain": "iaqualink_custom",
+  "name": "iAqualink Matthew",
+  "version": "1.0.1",
+  "requirements": ["iaqualink==0.1.0"],
+  "dependencies": [],
+  "codeowners": ["Matthew Allen"],
+  "iot_class": "cloud_push",
+  "config_flow": false,
+  "integration_type": "platform",
+  "platforms": ["vacuum", "sensor", "binary_sensor"]
+}
