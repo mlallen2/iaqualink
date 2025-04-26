@@ -1,8 +1,11 @@
+import asyncio
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from .const import DOMAIN
 from .coordinator import IAquaLinkCoordinator
+from .vacuum import IAquaLinkRobotVacuum
 
 async def async_setup_entry(hass, entry, async_add_entities):
+    """Set up the binary sensors for iAqualink Robots."""
     coord: IAquaLinkCoordinator = hass.data[DOMAIN][entry.entry_id]
     vacuum = IAquaLinkRobotVacuum(coord, entry)
     async_add_entities([
@@ -12,7 +15,9 @@ async def async_setup_entry(hass, entry, async_add_entities):
     ])
 
 class IAquaLinkBinarySensor(BinarySensorEntity):
-    def __init__(self, vac, key, fn, label, source="status"):
+    """Generic binary sensor for iAqualink Robot attributes."""
+
+    def __init__(self, vac: IAquaLinkRobotVacuum, key: str, fn, label: str, source: str = "status"):
         self.vac = vac
         self.key = key
         self.fn = fn
@@ -20,12 +25,12 @@ class IAquaLinkBinarySensor(BinarySensorEntity):
         self.source = source
 
     @property
-    def is_on(self):
+    def is_on(self) -> bool:
         val = self.vac.coordinator.data[self.source].get(self.key)
         return bool(self.fn(val))
 
     @property
-    def available(self):
+    def available(self) -> bool:
         return True
 
     @property
@@ -34,4 +39,3 @@ class IAquaLinkBinarySensor(BinarySensorEntity):
 
     async def async_update(self):
         await self.vac.coordinator.async_request_refresh()
-
