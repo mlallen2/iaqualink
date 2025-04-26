@@ -5,6 +5,5 @@
       "path": "custom_components/iaqualink_custom",
       "type": "integration"
     }
-  ],
-  "homeassistant": "2021.6.0"
+  ]
 }
