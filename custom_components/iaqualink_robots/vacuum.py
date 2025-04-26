@@ -2,6 +2,8 @@ import asyncio
 import json
 import datetime
 import aiohttp
+from homeassistant.helpers.entity import DeviceInfo
+
 from datetime import timedelta
 
 from homeassistant.components.vacuum import (
@@ -103,6 +105,15 @@ class IAquaLinkRobotVacuum(StateVacuumEntity):
     def fan_speed_list(self) -> list:
         """Return list of supported fan speeds."""
         return self._fan_speed_list
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device info for grouping all entities under one device."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._username)},  # or (DOMAIN, self._serial_number)
+            name=self._attr_name,
+            manufacturer="iAqualink",
+            model=self._attr_extra_state_attributes.get("model"),
+        )
 
     async def async_start(self) -> None:
         """Start the cleaning cycle (stub)."""
@@ -138,9 +149,13 @@ class IAquaLinkUsernameSensor(SensorEntity):
     def available(self):
         return True
 
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
+
     async def async_update(self):
         await self._vac.async_update()
-
+    
 
 class IAquaLinkFirstNameSensor(SensorEntity):
     def __init__(self, vac):
@@ -154,6 +169,10 @@ class IAquaLinkFirstNameSensor(SensorEntity):
     @property
     def available(self):
         return True
+    
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
 
     async def async_update(self):
         await self._vac.async_update()
@@ -171,6 +190,9 @@ class IAquaLinkLastNameSensor(SensorEntity):
     @property
     def available(self):
         return True
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info  
 
     async def async_update(self):
         await self._vac.async_update()
@@ -188,7 +210,9 @@ class IAquaLinkIDSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -205,7 +229,9 @@ class IAquaLinkSerialSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -222,7 +248,9 @@ class IAquaLinkDeviceTypeSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -239,7 +267,9 @@ class IAquaLinkLastOnlineSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -257,7 +287,9 @@ class IAquaLinkTemperatureSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -274,7 +306,9 @@ class IAquaLinkTotalHoursSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -291,7 +325,9 @@ class IAquaLinkCycleStartSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -308,7 +344,9 @@ class IAquaLinkCycleSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -326,7 +364,9 @@ class IAquaLinkCycleDurationSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -343,7 +383,9 @@ class IAquaLinkCycleEndSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -360,7 +402,9 @@ class IAquaLinkTimeRemainingSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -377,7 +421,9 @@ class IAquaLinkModelSensor(SensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -396,7 +442,9 @@ class IAquaLinkCanisterFullSensor(BinarySensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -413,7 +461,9 @@ class IAquaLinkErrorStateSensor(BinarySensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
 
@@ -430,6 +480,8 @@ class IAquaLinkCleaningActiveSensor(BinarySensorEntity):
     @property
     def available(self):
         return True
-
+    @property
+    def device_info(self) -> DeviceInfo:
+        return self._vac.device_info
     async def async_update(self):
         await self._vac.async_update()
