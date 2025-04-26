@@ -53,6 +53,21 @@ class IAquaLinkRobotVacuum(StateVacuumEntity):
     @property
     def supported_features(self):
         return SUPPORT_FLAGS
+def __init__(self, config):
+        super().__init__()
+        # required so HA can call IAquaLinkRobotVacuum(config)
+        self._name = config.get("name")
+        self._username = config.get("username")
+        self._password = config.get("password")
+        self._api_key = config.get("api_key")
+
+        # initialize anything your sensors/readers will use
+        self._attributes = {}
+        self._activity = VacuumActivity.IDLE
+        self._status = STATE_OFF
+        self._supported_features = SUPPORT_FLAGS
+        self._temperature = None
+        self._battery_level = None
 
 # ──────── SensorEntity classes ────────
 
