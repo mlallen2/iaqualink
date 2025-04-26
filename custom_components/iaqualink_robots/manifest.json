@@ -1,6 +1,6 @@
 {
   "domain": "iaqualink_robots",
-  "name": "iAqualink Custom",
+  "name": "iAqualink Robots",
   "version": "1.0.1",
   "requirements": ["iaqualink==0.1.0"],
   "dependencies": [],
