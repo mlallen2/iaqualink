@@ -4,10 +4,9 @@
   "version": "1.0.1",
   "requirements": ["iaqualink==0.1.0"],
   "dependencies": [],
-  "codeowners": ["@yourgithubusername"],
+  "codeowners": ["@mlallen2"],
   "iot_class": "cloud_push",
   "config_flow": true,
   "integration_type": "integration",
   "platforms": ["vacuum", "sensor", "binary_sensor"]
 }
-
