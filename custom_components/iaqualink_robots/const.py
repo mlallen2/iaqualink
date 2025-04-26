@@ -5,7 +5,12 @@ from pathlib import Path
 from typing import Final
 from homeassistant.const import Platform
 
-PLATFORMS: Final = [Platform.SENSOR]
+PLATFORMS: Final = [
+    Platform.VACUUM,
+    Platform.SENSOR,
+    Platform.BINARY_SENSOR,
+]
+
 
 URL_LOGIN="https://prod.zodiac-io.com/users/v1/login"
 URL_GET_DEVICES="https://r-api.iaqualink.net/devices.json"
