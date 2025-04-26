@@ -1,5 +1,5 @@
 {
-  "domain": "iaqualink_custom",
+  "domain": "iaqualink_robots",
   "name": "iAqualink Custom",
   "version": "1.0.1",
   "requirements": ["iaqualink==0.1.0"],
