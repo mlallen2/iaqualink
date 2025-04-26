@@ -88,6 +88,7 @@ class IAquaLinkRobotVacuum(StateVacuumEntity):
 
         # Extra attributes container
         self._attr_extra_state_attributes = {}
+        self._attributes = self._attr_extra_state_attributes
 
         # Placeholder data
         self._temperature   = None
