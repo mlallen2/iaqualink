@@ -16,6 +16,9 @@ from homeassistant.const import (
     STATE_ON,
 )
 
+from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.binary_sensor import BinarySensorEntity
+
 from .const import (
     URL_LOGIN,
     URL_GET_DEVICES,
@@ -77,6 +80,16 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     """Set up the iaqualink_robots vacuum platform."""
     # Your setup code here
     async_add_entities([IAquaLinkRobotVacuum(config)])
+    # temperature sensor
+    temp   = IAquaLinkTemperatureSensor(vacuum)
+    # canister-full binary sensor
+    can    = IAquaLinkCanisterFullSensor(vacuum)
+    # error-state binary sensor
+    err    = IAquaLinkErrorStateSensor(vacuum)
+    # cleaning-active binary sensor
+    clean  = IAquaLinkCleaningActiveSensor(vacuum)
+
+    async_add_entities([temp, can, err, clean])
 
 
 class IAquaLinkRobotVacuum(StateVacuumEntity):
@@ -732,3 +745,77 @@ class IAquaLinkRobotVacuum(StateVacuumEntity):
                 data= None
 
                 data = await asyncio.wait_for(self.post_command_i2d(url,request), timeout=800)
+# ─────────── New: Binary Sensors & Temperature ───────────
+
+class IAquaLinkTemperatureSensor(SensorEntity):
+    """Pool Robot Temperature Sensor"""
+    def __init__(self, vac: IAquaLinkRobotVacuum):
+        self._vac = vac
+        self._attr_name = f"{vac.name} Temperature"
+        self._attr_unit_of_measurement = "°F"    # or "°C" if you convert
+
+    @property
+    def state(self):
+        return self._vac.temperature
+
+    @property
+    def available(self):
+        return self._vac.available
+
+    async def async_update(self):
+        await self._vac.async_update()
+
+
+class IAquaLinkCanisterFullSensor(BinarySensorEntity):
+    """True if canister is non-zero (i.e. full)"""
+    def __init__(self, vac: IAquaLinkRobotVacuum):
+        self._vac = vac
+        self._attr_name = f"{vac.name} Canister Full"
+
+    @property
+    def is_on(self):
+        # change the threshold if “full” means >0
+        return int(self._vac._attributes.get('canister', 0)) > 0
+
+    @property
+    def available(self):
+        return self._vac.available
+
+    async def async_update(self):
+        await self._vac.async_update()
+
+
+class IAquaLinkErrorStateSensor(BinarySensorEntity):
+    """True if any error_code != 0"""
+    def __init__(self, vac: IAquaLinkRobotVacuum):
+        self._vac = vac
+        self._attr_name = f"{vac.name} Error State"
+
+    @property
+    def is_on(self):
+        return int(self._vac._attributes.get('error_state', 0)) != 0
+
+    @property
+    def available(self):
+        return self._vac.available
+
+    async def async_update(self):
+        await self._vac.async_update()
+
+
+class IAquaLinkCleaningActiveSensor(BinarySensorEntity):
+    """True when vacuum is actively cleaning"""
+    def __init__(self, vac: IAquaLinkRobotVacuum):
+        self._vac = vac
+        self._attr_name = f"{vac.name} Cleaning Active"
+
+    @property
+    def is_on(self):
+        return self._vac.activity == VacuumActivity.CLEANING
+
+    @property
+    def available(self):
+        return self._vac.available
+
+    async def async_update(self):
+        await self._vac.async_update()
