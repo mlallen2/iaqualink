@@ -11,7 +11,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema({
 })
 
 class IaqualinkConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for iAqualink Custom."""
+    """Handle a config flow for iAqualink Robots."""
 
     VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
@@ -20,18 +20,20 @@ class IaqualinkConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle the initial step."""
         errors = {}
         if user_input:
-            # Validate credentials by calling login endpoint
-            data = {
-                "apikey": user_input["api_key"],
-                "email": user_input["username"],
-                "password": user_input["password"],
-            }
+            # Validate credentials
+            session = self.hass.helpers.aiohttp_client.async_get_clientsession()
             try:
-                session = self.hass.helpers.aiohttp_client.async_get_clientsession()
-                resp = await session.post(URL_LOGIN, json=data, timeout=10)
+                resp = await session.post(
+                    URL_LOGIN,
+                    json={
+                        "apikey": user_input["api_key"],
+                        "email": user_input["username"],
+                        "password": user_input["password"],
+                    },
+                    timeout=10
+                )
                 resp.raise_for_status()
                 auth = await resp.json()
-                # success if we get a token
                 if "authentication_token" not in auth:
                     raise Exception("no_token")
             except Exception:
@@ -51,6 +53,5 @@ class IaqualinkConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        # not needed for now
+        """No options flow."""
         return None
-
