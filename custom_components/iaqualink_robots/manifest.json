@@ -9,4 +9,15 @@
   "config_flow": false,
   "integration_type": "platform",
   "platforms": ["vacuum", "sensor", "binary_sensor"]
+  "domain": "iaqualink_custom",
+  "name": "iAqualink Custom",
+  "version": "1.0.1",
+  "requirements": ["iaqualink==0.1.0"],
+  "dependencies": [],
+  "codeowners": ["@yourgithubusername"],
+  "iot_class": "cloud_push",
+  "config_flow": true,
+  "integration_type": "integration",
+  "platforms": ["vacuum", "sensor", "binary_sensor"]
 }
+
